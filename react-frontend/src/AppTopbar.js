@@ -4,10 +4,51 @@ import { Link, useHistory } from "react-router-dom";
 import classNames from "classnames";
 import { Button } from "primereact/button";
 import { Menu } from "primereact/menu";
+import { Menubar } from 'primereact/menubar';
 
 const AppTopbar = (props) => {
     const history = useHistory();
     const userMenuRef = useRef(null);
+
+    const menu_items = [
+        {
+            label: 'Home',
+            icon: 'pi pi-fw pi-home',
+            url: '/home',
+            
+        },
+        {
+            label: 'About Us',
+            icon: 'pi pi-fw pi-users',
+            url: '/about',
+            
+        },
+        {
+            label: 'Product',
+            icon: 'pi pi-fw pi-book',
+            url: '/productlisting',
+            
+        },
+        {
+            label: 'Promotion',
+            icon: 'pi pi-fw pi-dollar',
+            url: '/promotion',
+            
+        },
+        {
+            label: 'FAQ',
+            icon: 'pi pi-fw pi-question-circle',
+            url: '/faq',
+            
+        },
+        {
+            label: 'Contact Us',
+            icon: 'pi pi-fw pi-phone',
+            url: '/contact',
+            
+        },
+        
+    ];
 
     const toggleUserMenu = (e) => userMenuRef.current.toggle(e);
     const items = [
@@ -49,10 +90,11 @@ const AppTopbar = (props) => {
                 <div className="cursor-pointer min-w-max flex align-items-end">
                     {/* <img src={"assets/logo/cb-logo.svg"} height={30} className="mb-1" /> */}
                     <h3 className="text-red-500" style={{ fontFamily: "MarlinGeo", fontWeight: "bolder", margin: 0 }}>
-                        react-frontend
+                        Book-Store
                     </h3>
                 </div>
             </Link>
+            <Menubar model={menu_items} className='ml-4 mr-4' style={{ fontSize:13,width: '90vw' }}/>
 
             {props.showSideMenuButton ? (
                 <button type="button" className="p-link  layout-menu-button layout-topbar-button" onClick={props.onToggleMenuClick}>

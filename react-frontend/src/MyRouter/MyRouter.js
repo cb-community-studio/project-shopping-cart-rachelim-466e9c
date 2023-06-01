@@ -9,6 +9,8 @@ import { AppMenu } from "../AppMenu";
 import { AppConfigStatic } from "../AppConfigStatic";
 
 import Dashboard from "../components/Dashboard/Dashboard";
+import ContactUs from "../components/ContactUs/ContactUs";
+
 
 import PrimeReact from "primereact/api";
 
@@ -180,7 +182,8 @@ const MyRouter = () => {
             <MainLayout>
                 <Switch>
                     <Route path="/" exact render={() => <Dashboard colorMode={layoutColorMode} location={location} />} />
-                    <Route path="/dashboard" exact render={() => <Dashboard colorMode={layoutColorMode} location={location} />} />
+                    <Route path="/home" exact render={() => <Dashboard colorMode={layoutColorMode} location={location} />} />
+                    <Route path="/contact" exact render={() => <ContactUs colorMode={layoutColorMode} location={location} />} />
                     <Route path="/login" component={LoginPage} />
                     <Route path="/signup" exact component={SignUpPage} />
                     <Route path="/account" component={Account} />

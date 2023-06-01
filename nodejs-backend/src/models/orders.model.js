@@ -8,7 +8,7 @@
           // ~cb-read-start~
           {
        orderUser: { type: String, required: true },
-       orderSummary: { type: String },
+       orderSummary: { type: Array, required: true },
        orderPayment: { type: Number, required: true },
        orderPaymentOption: { type: String, required: true },
        orderShippingAddr: { type: String, required: true },

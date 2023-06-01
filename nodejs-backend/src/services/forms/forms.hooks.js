@@ -1,4 +1,5 @@
 const { authenticate } = require("@feathersjs/authentication").hooks;
+const validateAdmin = require('../../hooks/users/validate-admin');
 
 module.exports = {
     before: {
@@ -6,9 +7,9 @@ module.exports = {
         find: [],
         get: [],
         create: [],
-        update: [],
-        patch: [],
-        remove: [],
+        update: [validateAdmin()],
+        patch: [validateAdmin()],
+        remove: [validateAdmin()],
     },
 
     after: {
