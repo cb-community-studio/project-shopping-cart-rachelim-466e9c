@@ -3,13 +3,13 @@ const validateAdmin = require('../../hooks/users/validate-admin');
 
 module.exports = {
     before: {
-        all: [authenticate("jwt")],
+        all: [],
         find: [],
         get: [],
         create: [],
-        update: [validateAdmin()],
-        patch: [validateAdmin()],
-        remove: [validateAdmin()],
+        update: [authenticate("jwt"),validateAdmin()],
+        patch: [authenticate("jwt"),validateAdmin()],
+        remove: [authenticate("jwt"),validateAdmin()],
     },
 
     after: {

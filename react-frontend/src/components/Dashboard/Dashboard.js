@@ -1,13 +1,29 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
+import client from "../../services/restClient";
 import welcomeImg from "../../assets/media/welcomeImg.jpg";
 import { Button } from "primereact/button";
+import { Image } from "primereact/image";
 
 
 const Dashboard = (props) => {
     const history = useHistory();
-    useEffect(() => { }, []);
+    const [data, setData] = useState([]);
+    useEffect(() => {
+        //on mount
+        client
+            .service("products")
+            .find({ query: { $limit: 3 } })
+            .then((res) => {
+                setData(res.data);
+                console.log(res.data);
+            })
+            .catch((error) => {
+                console.log({ error });
+                props.alert({ title: "Products", type: "error", message: error.message || "Failed get products" });
+            });
+    }, []);
 
     return (
         <div>
@@ -19,8 +35,8 @@ const Dashboard = (props) => {
                         <div className="text-6xl text-primary font-bold mb-3">Batch 5 Book Store</div>
                         <p className="mt-0 mb-4 text-700 line-height-3">Sign Up to our bookstore today to receive updates/offers on the latest news and special offers!</p>
 
-                        <Button label="lOGIN" type="button" className="mr-3 p-button-raised" onClick={() => history.push("/login")}/>
-                        <Button label="sIGNuP" type="button" className="p-button-outlined" onClick={() => history.push("/signup")}/>
+                        <Button label="lOGIN" type="button" className="mr-3 p-button-raised" onClick={() => history.push("/login")} />
+                        <Button label="sIGNuP" type="button" className="p-button-outlined" onClick={() => history.push("/signup")} />
                     </section>
                 </div>
                 <div className="col-12 md:col-6 overflow-hidden">
@@ -28,79 +44,85 @@ const Dashboard = (props) => {
                 </div>
             </div>
             <br></br>
-            
-<div className="surface-0 text-center pt-4">
-    <div className="mb-3 font-bold text-3xl">
-        <span className="text-900">One Store, </span>
-        <span className="text-blue-600">Many Source of Book</span>
-    </div>
-    <div className="text-700 mb-6">“Bookshops are places of endless entertainment and renewal – what’s not to love?” – Andy Griffiths</div>
-    <div className="grid">
-        <div className="col-12 md:col-4 mb-4 px-5">
-            <span className="p-3 shadow-2 mb-3 inline-block" style={{ borderRadius: '10px' }}>
-                <i className="pi pi-file-pdf text-4xl text-blue-500"></i>
-            </span>
-            <div className="text-900 text-xl mb-3 font-medium">PDF Version</div>
-            <span className="text-700 line-height-3">PDF Version will be included as you read when ever you want.</span>
-        </div>
-        <div className="col-12 md:col-4 mb-4 px-5">
-            <span className="p-3 shadow-2 mb-3 inline-block" style={{ borderRadius: '10px' }}>
-                <i className="pi pi-globe text-4xl text-blue-500"></i>
-            </span>
-            <div className="text-900 text-xl mb-3 font-medium">Worldwide Sources</div>
-            <span className="text-700 line-height-3">You want it, we will get for you where ever you wish.</span>
-        </div>
-        <div className="col-12 md:col-4 mb-4 px-5">
-            <span className="p-3 shadow-2 mb-3 inline-block" style={{ borderRadius: '10px' }}>
-                <i className="pi pi-sync text-4xl text-blue-500"></i>
-            </span>
-            <div className="text-900 text-xl mb-3 font-medium">Exchange Books</div>
-            <span className="text-700 line-height-3">You may enjoy reading all kinds of book and sharing with other book lovers if you wish too.</span>
-        </div>
-    </div>
-</div>
-    
-            <div className="col-12 flex flex-column align-items-center">
-                <div className="flex w-10">
-                    <div className=" w-8">
-                        <h4 className="ml-4">Microservices Ready</h4>
-                        <div className="w-full flex justify-content-center flex-wrap ">
-                            <></>
-                            <div className='col-12 lg:col-6 xl:col-4'><Link to='/users'><div className='card mb-0 flex flex-column align-items-center justify-content-center hover zoom' style={{ height: '10rem' }}><div className='text-900 font-medium text-lg'>Users</div></div></Link></div>
-                            <div className='col-12 lg:col-6 xl:col-4'><Link to='/products'><div className='card mb-0 flex flex-column align-items-center justify-content-center hover zoom' style={{ height: '10rem' }}><div className='text-900 font-medium text-lg'>Products</div></div></Link></div>
-                            <div className='col-12 lg:col-6 xl:col-4'><Link to='/carts'><div className='card mb-0 flex flex-column align-items-center justify-content-center hover zoom' style={{ height: '10rem' }}><div className='text-900 font-medium text-lg'>Carts</div></div></Link></div>
-                            <div className='col-12 lg:col-6 xl:col-4'><Link to='/orders'><div className='card mb-0 flex flex-column align-items-center justify-content-center hover zoom' style={{ height: '10rem' }}><div className='text-900 font-medium text-lg'>Orders</div></div></Link></div>
-                            <div className='col-12 lg:col-6 xl:col-4'><Link to='/forms'><div className='card mb-0 flex flex-column align-items-center justify-content-center hover zoom' style={{ height: '10rem' }}><div className='text-900 font-medium text-lg'>Forms</div></div></Link></div>
-                            <div className='col-12 lg:col-6 xl:col-4'><Link to='/promotions'><div className='card mb-0 flex flex-column align-items-center justify-content-center hover zoom' style={{ height: '10rem' }}><div className='text-900 font-medium text-lg'>Promotions</div></div></Link></div>
-                            {/* ~cb-add-services-card~ */}
-                        </div>
-                    </div>
-                    <div className="w-4 flex flex-column align-items-center">
-                        <p className="text-7xl m-0" role="welcome-text">
-                            Welcome!
-                        </p>
-                        <p>You are ready to go!</p>
-                    </div>
+
+            <div className="surface-0 text-center pt-4">
+                <div className="mb-3 font-bold text-3xl">
+                    <span className="text-900">One Store, </span>
+                    <span className="text-primary">Many Source of Book</span>
                 </div>
-                <div className="card w-10 my-6">
-                    <h4>REST API Ready</h4>
-                    <p className="underline m-0">e.g. Authentication</p>
-                    <p>POST http://localhost:3030/authentication {`{ "email": "example@email.com",    "password": "123456" }`}</p>
-                    <p className="underline m-0">e.g. CRUD</p>
-                    <p className="m-0">
-                        GET {`=>`} GET http://localhost:3030/users/{`<userId>`}
-                    </p>
-                    <p className="m-0">
-                        CREATE {`=>`} POST http://localhost:3030/users` {`{ "email": "example2@email.com",    "password": "456789" }`}
-                    </p>
-                    <p className="m-0">
-                        PATCH {`=>`} PATCH http://localhost:3030/users/{`<userId>`}` {`{ "name": "Thomas Smith" }`}
-                    </p>
-                    <p className="m-0">
-                        DELETE {`=>`} DELETE http://localhost:3030/users/{`<userId>`}
-                    </p>
+                <div className="text-700 mb-6">“Bookshops are places of endless entertainment and renewal – what’s not to love?” – Andy Griffiths</div>
+                <div className="grid">
+                    <div className="col-12 md:col-4 mb-4 px-5">
+                        <span className="p-3 shadow-2 mb-3 inline-block" style={{ borderRadius: '10px' }}>
+                            <i className="pi pi-file-pdf text-4xl text-primary"></i>
+                        </span>
+                        <div className="text-900 text-xl mb-3 font-medium">PDF Version</div>
+                        <span className="text-700 line-height-3">PDF Version will be included as you read when ever you want.</span>
+                    </div>
+                    <div className="col-12 md:col-4 mb-4 px-5">
+                        <span className="p-3 shadow-2 mb-3 inline-block" style={{ borderRadius: '10px' }}>
+                            <i className="pi pi-globe text-4xl text-primary"></i>
+                        </span>
+                        <div className="text-900 text-xl mb-3 font-medium">Worldwide Sources</div>
+                        <span className="text-700 line-height-3">You want it, we will get for you where ever you wish.</span>
+                    </div>
+                    <div className="col-12 md:col-4 mb-4 px-5">
+                        <span className="p-3 shadow-2 mb-3 inline-block" style={{ borderRadius: '10px' }}>
+                            <i className="pi pi-sync text-4xl text-primary"></i>
+                        </span>
+                        <div className="text-900 text-xl mb-3 font-medium">Exchange Books</div>
+                        <span className="text-700 line-height-3">You may enjoy reading all kinds of book and sharing with other book lovers if you wish too.</span>
+                    </div>
                 </div>
             </div>
+            <br></br>
+
+            <div className="surface-0 pt-4">
+                <div className="text-900 font-bold text-3xl text-center">Feature Products</div>
+                <div className="text-700 mb-6 text-center">Find your favourate book here.</div>
+                <div className="grid justify-content-center ">
+                    {data.map((inddata, index) => (
+
+
+                        <div key={index} className="col-12 lg:col-4">
+                            <div className="p-3 h-full">
+                                <div className="shadow-2 p-3 h-full flex flex-column" style={{ borderRadius: '6px' }}>
+                                    <div className="flex justify-content-center">
+                                        <Image src={require("../../assets/media/welcomeImg.jpg")} alt="" width="200" />
+
+                                    </div>
+
+                                    <div className="text-900 font-medium text-xl mb-2">{inddata.productName}</div>
+                                    <div className="text-600">{inddata.productSKU}</div>
+                                    <hr className="my-3 mx-0 border-top-1 border-bottom-none border-300" />
+                                    <div className="flex justify-content-between align-items-center">
+                                        <span className="font-bold text-2xl text-900">RM {inddata.productPrice}</span>
+                                        <span className="ml-2 font-medium text-600">{inddata.productInStock}</span>
+                                    </div>
+                                    <hr className="my-3 mx-0 border-top-1 border-bottom-none border-300" />
+                                    <ul className="list-none p-0 m-0 flex-grow-1">
+                                        <li className="flex align-items-center mb-3">
+                                            <i className="pi pi-check-circle text-green-500 mr-2"></i>
+                                            <span>Brand Name: {inddata.productBrand}</span>
+                                        </li>
+                                        <li className="flex align-items-center mb-3">
+                                            <i className="pi pi-check-circle text-green-500 mr-2"></i>
+                                            <span>Details: {inddata.productDetails}</span>
+                                        </li>
+                                    </ul>
+                                    <hr className="mb-3 mx-0 border-top-1 border-bottom-none border-300 mt-auto" />
+                                    <Button label="View More" type="button" className="p-3 w-full mt-auto" onClick={() => history.push("/productlisting")} />
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    ))}
+                </div>
+
+            </div>
+
 
 
         </div>
@@ -112,6 +134,7 @@ const mapState = (state) => {
     return {};
 };
 const mapDispatch = (dispatch) => ({
+    alert: (data) => dispatch.toast.alert(data),
     //
 });
 

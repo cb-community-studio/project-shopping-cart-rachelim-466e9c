@@ -8,11 +8,11 @@
           // ~cb-read-start~
           {
        formUser: { type: String, required: true },
-       formPhone: { type: String, required: true },
+       formPhone: { type: String, required: false },
        formEmail: { type: String, required: true },
        formContent: { type: String, required: true },
-       formRemarks: { type: String, required: true },
-       formType: { type: String, required: true },
+       formRemarks: { type: String, default:"Please Check else please stated as Done" },
+       formType: { type: String, required: true , default:"enquiry" },
 
     }
           // ~cb-read-end~
