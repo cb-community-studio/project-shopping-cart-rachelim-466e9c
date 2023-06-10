@@ -12,7 +12,7 @@
        orderPayment: { type: Number, required: true },
        orderPaymentOption: { type: String, required: true },
        orderShippingAddr: { type: String, required: true },
-       orderDate: { type: Date, required: true },
+      //  orderDate: { type: Date, required: true },  created consider ald
        orderStatus: { type: String, required: true, default: 'Pending' },
        orderShipment: { type: String },
 

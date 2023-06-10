@@ -10,6 +10,13 @@ module.exports = function (options = {}) {
 
             const { data, method } = context;
 
+            console.log("newwwwwwwwwwwwwwwwwwww ", context)
+
+            if(data.cartStatus){
+                return context;
+            }
+
+
             // every time create or patch must bring along the cartProduct
             if (!data.cartProduct){
                 throw new Error('Please insert the product sku');

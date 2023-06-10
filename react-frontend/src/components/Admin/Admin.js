@@ -17,11 +17,12 @@ import { Dropdown } from 'primereact/dropdown';
 import { Link, useHistory } from "react-router-dom";
 
 
-import '../Account/myacc.css';
+import '../Admin/myacc.css';
 import { compact } from "lodash";
 
-const Account = (props) => {
+const Admin = (props) => {
     const history = useHistory();
+
     const [user, setUser] = useState(null);
     const [objectID, setObjectID] = useState("");
     const [username, setUsername] = useState("");
@@ -225,46 +226,51 @@ const Account = (props) => {
             </div>
         );
     };
-    
 
     useEffect(() => {
         //on mount
         client
             .service("users")
-            .find({ query: { $limit: 10 } })
+            .find({ query: { isAdmin: true } })
             .then((res) => {
-                setUser(res.data);
-                setUsername(res.data[0].username);
-                setEmail(res.data[0].email);
-                setFullname(res.data[0].fullname);
-                setPhone(res.data[0].phone);
-                setBillingAddr(res.data[0].billingAddr);
-                setObjectID(res.data[0]._id)
-                setAdminStatus(res.data[0].isAdmin)
-                console.log(res.data);
-                client
-                    .service("carts")
-                    .find({ query: { $limit: 100, cartUser: res.data[0]._id } })
-                    .then((resCart) => {
-                        setProducts(resCart.data)
-                        console.log("carts", resCart.data);
-                    })
-                    .catch((error) => {
-                        console.log({ error });
-                        props.alert({ title: "Carts", type: "error", message: error.message || "Failed get carts" });
-                    });
+                // setUser(res.data);
+                // setUsername(res.data[0].username);
+                // setEmail(res.data[0].email);
+                // setFullname(res.data[0].fullname);
+                // setPhone(res.data[0].phone);
+                // setBillingAddr(res.data[0].billingAddr);
+                // setObjectID(res.data[0]._id)
+                // setAdminStatus(res.data[0].isAdmin)
+                console.log("admin",res.data);
+                if (!res.data.length){
+                    history.push('/home');
+                    props.alert({ title: "Admin Site", type: "error", message: "You are not allowed to access this site" });
 
-                client
-                    .service("orders")
-                    .find({ query: { $limit: 100, cartUser: res.data[0]._id } })
-                    .then((resOrder) => {
-                        setOrders(resOrder.data)
-                        console.log("orders", resOrder.data);
-                    })
-                    .catch((error) => {
-                        console.log({ error });
-                        props.alert({ title: "Orders", type: "error", message: error.message || "Failed get orders" });
-                    });
+
+                }
+                // client
+                //     .service("carts")
+                //     .find({ query: { $limit: 100, cartUser: res.data[0]._id } })
+                //     .then((resCart) => {
+                //         setProducts(resCart.data)
+                //         console.log("carts", resCart.data);
+                //     })
+                //     .catch((error) => {
+                //         console.log({ error });
+                //         props.alert({ title: "Carts", type: "error", message: error.message || "Failed get carts" });
+                //     });
+
+                // client
+                //     .service("orders")
+                //     .find({ query: { $limit: 100, cartUser: res.data[0]._id } })
+                //     .then((resOrder) => {
+                //         setOrders(resOrder.data)
+                //         console.log("orders", resOrder.data);
+                //     })
+                //     .catch((error) => {
+                //         console.log({ error });
+                //         props.alert({ title: "Orders", type: "error", message: error.message || "Failed get orders" });
+                //     });
             })
             .catch((error) => {
                 console.log({ error });
@@ -296,58 +302,17 @@ const Account = (props) => {
 
 
             </Dialog>) : null}
+
             <div className="col-12">
-                <div className="card flex flex-column align-items-center mb-3">
-                    {adminStatus ? (
-                        <Button type="button" icon="pi pi-user" label="Admin Button" className="m-1" onClick={() => history.push("/admin")}></Button>
-
-                    ) : <Avatar className="p-overlay-badge m-3" icon="pi pi-user" size="xlarge" style={{ height: "6rem", width: "6rem" }}></Avatar>
-                    }
-                    <p className="m-0">{props.user?.name}</p>
-                    {props.user?.email ? <p className="m-0">{props.user?.email}</p> : null}
-
-                </div>
                 <div className="card">
-                    {/* <h5>Header Icons</h5> */}
                     <TabView className="tabview-demo tabview-header-icon">
-                        <TabPanel header=" -Profile " leftIcon="pi pi-user ">
-                            <Fieldset legend="Profile Edit" className="p-mb-6 col-12 w-full">
-
-                                <div className="grid p-8 col-12 xl:col-8 flex flex-column align-items-center w-full">
-                                    <div className="w-full mb-4">
-                                        <p className="m-0">Username</p>
-                                        <InputText type="text" className="w-full" placeholder="Please place your name" value={username} onChange={(e) => setUsername(e.target.value)} ></InputText>
-
-                                    </div>
-                                    <div className="w-full mb-4">
-                                        <p className="m-0">Email (ReadOnly)</p>
-                                        <InputText type="text" className="w-full" placeholder="example@gmail.com" value={email} readOnly onChange={(e) => setEmail(e.target.value)} ></InputText>
-
-                                    </div>
-                                    <div className="w-full mb-4">
-                                        <p className="m-0">Fullname</p>
-                                        <InputText type="text" className="w-full" placeholder="Please place your fullname" value={fullname} onChange={(e) => setFullname(e.target.value)} ></InputText>
-
-                                    </div>
-                                    <div className="w-full mb-4">
-                                        <p className="m-0">Phone Number</p>
-                                        <InputText type="text" className="w-full" placeholder="Please place your phone" value={phone} onChange={(e) => setPhone(e.target.value)} ></InputText>
-                                        <br></br>
-                                        <small className="p-error">{emailError}</small>
-                                    </div>
-                                    <div className="w-full mb-4">
-                                        <p className="m-0">Billing Address</p>
-                                        <InputText type="text" className="w-full" placeholder="Please place your address" value={billingAddr} onChange={(e) => setBillingAddr(e.target.value)} ></InputText>
-
-                                    </div>
-                                    <div className="w-full mb-4 flex justify-content-end">
-                                        <Button label="Edit" className="p-button-raised" onClick={handleSubmit} loading={loading}></Button>
-                                    </div>
-                                </div>
-
-                            </Fieldset>
+                        <TabPanel header=" -User List " leftIcon="pi pi-user ">
+                            
                         </TabPanel>
-                        <TabPanel header=" -Shopping Cart " leftIcon="pi pi-shopping-cart">
+                        <TabPanel header=" -Product List " leftIcon="pi pi-tags ">
+                            
+                        </TabPanel>
+                        <TabPanel header=" -Shopping Cart List" leftIcon="pi pi-shopping-cart">
                             <div className="card">
                                 <DataTable value={products} responsiveLayout="scroll" dataKey="_id" rowHover selection={selectedCustomers} onSelectionChange={e => setSelectedCustomers(e.value)} emptyMessage="No carts found.">
                                     <Column selectionMode="multiple" selectionAriaLabel="name" headerStyle={{ width: '3em' }}></Column>
@@ -388,21 +353,26 @@ const Account = (props) => {
 
                             </div>
                         </TabPanel>
-                        <TabPanel header=" -Order History " leftIcon="pi pi-history" >
-                            <DataTable value={orders} responsiveLayout="scroll" dataKey="_id" rowHover emptyMessage="No order found.">
-
-                                <Column field="orderSummary" header="Products" body={rowExpansionTemplate}></Column>
+                        <TabPanel header=" -Order History List" leftIcon="pi pi-history" >
+                            <DataTable value={orders} responsiveLayout="scroll" dataKey="_id" rowHover  emptyMessage="No order found.">
+                             
+                                <Column field="orderSummary" header="Products" body={rowExpansionTemplate }></Column>
                                 <Column field="orderPaymentOption" header="Payment Option"></Column>
                                 <Column field="orderStatus" header="Status"></Column>
                                 <Column field="orderPayment" className="text-center" header="Total Amount"></Column>
                                 <Column field="orderShipment" className="text-center" header="Detail"></Column>
                             </DataTable>
                         </TabPanel>
-                        {/* {adminStatus ? (
-                            <TabPanel header=" -Admin Tab " leftIcon="pi pi-cog" >
-                                <p>Admin Component</p>
-                            </TabPanel>
-                        ) : null} */}
+                        <TabPanel header=" -FAQ List" leftIcon="pi pi-question-circle" >
+                            <DataTable value={orders} responsiveLayout="scroll" dataKey="_id" rowHover  emptyMessage="No order found.">
+                             
+                                <Column field="orderSummary" header="Products" body={rowExpansionTemplate }></Column>
+                                <Column field="orderPaymentOption" header="Payment Option"></Column>
+                                <Column field="orderStatus" header="Status"></Column>
+                                <Column field="orderPayment" className="text-center" header="Total Amount"></Column>
+                                <Column field="orderShipment" className="text-center" header="Detail"></Column>
+                            </DataTable>
+                        </TabPanel>
 
                     </TabView>
                 </div>
@@ -421,4 +391,4 @@ const mapDispatch = (dispatch) => ({
     //
 });
 
-export default connect(mapState, mapDispatch)(Account);
+export default connect(mapState, mapDispatch)(Admin);

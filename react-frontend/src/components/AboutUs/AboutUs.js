@@ -8,9 +8,12 @@ import { Image } from "primereact/image";
 
 import { Card } from "primereact/card";
 
+import { Button } from 'primereact/button';
 
 
-const MyAboutPage = () => {
+
+
+const AboutUs = (props) => {
 
     const aboutContent = {
 
@@ -63,6 +66,7 @@ const MyAboutPage = () => {
     return (
 
         <div>
+            <h1 className="p-text-center">About Us</h1>
 
             <Panel header={aboutContent.title}>
 
@@ -81,6 +85,7 @@ const MyAboutPage = () => {
                 <p>{aboutContent.mission}</p>
 
             </Panel>
+            <br></br>
 
         </div>
 
@@ -128,4 +133,4 @@ const TeamSection = ({ founders }) => {
 
 
 
-export default MyAboutPage;
+export default AboutUs;

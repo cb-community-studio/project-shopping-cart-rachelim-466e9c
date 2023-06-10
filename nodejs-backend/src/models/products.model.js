@@ -14,7 +14,8 @@
        productRating: { type: Number, required: true, default: 0 },
        productInStock: { type: Number, required: true, default: 0 },
        productDetails: { type: String },
-       productImage: { type: String, required: true },
+       productImage: { type: String, required: true, default:"NA" },
+       productIsActive: { type: Boolean, required: true, default: true },
 
     }
           // ~cb-read-end~

@@ -10,7 +10,10 @@ import { AppConfigStatic } from "../AppConfigStatic";
 
 import Dashboard from "../components/Dashboard/Dashboard";
 import ContactUs from "../components/ContactUs/ContactUs";
-import MyAboutPage from "../components/AboutUs/AboutUs";
+import AboutUs from "../components/AboutUs/AboutUs";
+import Admin from "../components/Admin/Admin";
+import ProductListing from "../components/ProductListing/ProductListing";
+import ProductDetail from "../components/ProdcutDetail/ProductDetail";
 
 import FAQ from "../components/FAQ/faq";
 
@@ -188,9 +191,12 @@ const MyRouter = () => {
                 <Switch>
                     <Route path="/" exact render={() => <Dashboard colorMode={layoutColorMode} location={location} />} />
                     <Route path="/home" exact render={() => <Dashboard colorMode={layoutColorMode} location={location} />} />
-                    <Route path="/contact" exact render={() => <ContactUs colorMode={layoutColorMode} location={location} />} />
-                    <Route path="/faq" exact render={() => <FAQ colorMode={layoutColorMode} location={location} />} />
-                    <Route path="/about" exact render={() => <MyAboutPage colorMode={layoutColorMode} location={location} />} />
+                    <Route path="/contact"  render={() => <ContactUs colorMode={layoutColorMode} location={location} />} />
+                    <Route path="/faq"  render={() => <FAQ colorMode={layoutColorMode} location={location} />} />
+                    <Route path="/about"  render={() => <AboutUs colorMode={layoutColorMode} location={location} />} />
+                    <Route path="/productlisting"  render={() => <ProductListing colorMode={layoutColorMode} location={location} />} />
+                    <Route path="/productdetail/:productSKU" component={ProductDetail}  colorMode={layoutColorMode} location={location}  />
+                    <Route path="/admin"  render={() => <Admin colorMode={layoutColorMode} location={location} />} />
 
                     <Route path="/login" component={LoginPage} />
                     <Route path="/signup" exact component={SignUpPage} />

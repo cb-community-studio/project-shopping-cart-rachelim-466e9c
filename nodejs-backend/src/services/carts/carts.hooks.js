@@ -4,6 +4,8 @@ const validateAdminOwnUser = require('../../hooks/carts/validate-admin-ownuser')
 const validateDelete = require('../../hooks/carts/validate-cart-delete');
 const validateRetrieve = require('../../hooks/carts/validate-retrieve-cart');
 const validateDeleteAfterAdd = require('../../hooks/carts/validate-cart-delete-after-add.js');
+const appendProductData = require('../../hooks/products/appendCartProductData');
+
 
 
 
@@ -20,8 +22,8 @@ module.exports = {
 
     after: {
         all: [],
-        find: [],
-        get: [],
+        find: [appendProductData()],
+        get: [appendProductData()],
         create: [validateDeleteAfterAdd()],
         update: [],
         patch: [],

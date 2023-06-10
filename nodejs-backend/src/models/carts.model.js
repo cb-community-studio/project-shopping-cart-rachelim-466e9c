@@ -10,6 +10,7 @@
        cartUser: { type: String, required: true },
        cartProduct: { type: String, required: true },
        cartUnit: { type: Number, required: true },
+       cartStatus: { type: Boolean, required: true, default: false },
 
     }
           // ~cb-read-end~

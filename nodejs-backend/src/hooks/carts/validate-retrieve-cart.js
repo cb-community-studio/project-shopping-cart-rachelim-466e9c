@@ -9,11 +9,11 @@ module.exports = function (options = {}) {
         if (context.params.user) {
 
             if (context.params.user.isAdmin) {
-                return context;
+                context.params.query = {...context.params.query, cartStatus : false}
 
             } else {
 
-                context.params.query = {...context.params.query, cartUser : context.params.user._id.valueOf()}
+                context.params.query = {...context.params.query, cartUser : context.params.user._id.valueOf(), cartStatus : false}
 
 
             }

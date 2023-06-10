@@ -6,7 +6,7 @@ module.exports = function (options = {}) {
         try {
 
             const { data, method } = context;
-            console.log("context....", context)
+            console.log("newwwwwwwwwwwwwwwwwwww contxettt", context)
 
             const databaseCartData = await context.app.service("carts").find({
                 query: {
@@ -30,8 +30,9 @@ module.exports = function (options = {}) {
                     cartUser: databaseCartData.data[0].cartUser, cartProduct: databaseCartData.data[0].cartProduct
                 }
             });
-
-            if (databaseCartDataSameUser.data.length != 1) {
+            
+            // new setting, test error
+            if (databaseCartDataSameUser.data.length != 1 || databaseCartDataSameUser.data[0].cartStatus == true) {
 
                 return context
 
