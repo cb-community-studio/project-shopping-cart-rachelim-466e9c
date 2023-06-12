@@ -16,4 +16,5 @@ all password stardard : 123456
 
 
 All visitor allowed to send enquiry in contact form, view product details but cannot add to cart without login
+
 Admin able to manage user list, product list, FAQ list (Contact Form), Cart and Order list
