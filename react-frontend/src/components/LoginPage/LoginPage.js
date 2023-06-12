@@ -67,8 +67,8 @@ const LoginPage = (props) => {
                         <div className="w-6 mb-4">
                             <Button label="Login" className="p-button-raised p-button-rounded" onClick={login}></Button>
                         </div>
-                        <div className="w-full flex flex-column align-items-center">
-                            <div className="w-full flex justify-content-between">
+                        <div className="w-full text-center">
+                            <div className="w-full  text-center">
                                 <Link to="/signup">Don't have an account?</Link>
                             </div>
                         </div>

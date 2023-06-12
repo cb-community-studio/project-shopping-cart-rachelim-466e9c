@@ -69,10 +69,10 @@ const Account = (props) => {
     }
 
     function editModal(rowData) {
-        setDisplayEditData(rowData.cartDetail)
+        setDisplayEditData(rowData)
         setSelectedSingleID(rowData._id)
         setValue18(rowData.cartUnit)
-        console.log("Edit data", rowData, displayData, "selectedCustomers", selectedCustomers)
+        console.log("Edit data", rowData, displayData.cartDetail, "selectedCustomers", selectedCustomers)
         setVisible(true)
 
 
@@ -101,7 +101,7 @@ const Account = (props) => {
     async function addtocart(event) {
 
         let _data = {
-            cartProduct: displayData.productSKU,
+            cartProduct: displayData.cartDetail.productSKU,
             cartUnit: value18
 
         };
@@ -111,9 +111,9 @@ const Account = (props) => {
             const result = await client.service("carts").patch(selectedSingleID, _data);
             props.alert({ type: "success", title: "Update", message: "Updated the cart successfully" });
             let _newData = products.filter((_, i) => _._id !== selectedSingleID);
-            console.log([..._newData, { ...result, cartDetail: displayData }])
+            console.log([..._newData, { ...result, cartDetail: displayData.cartDetail }])
 
-            setProducts([..._newData, { ...result, cartDetail: displayData }]);
+            setProducts([..._newData, { ...result, cartDetail: displayData.cartDetail }]);
             setVisible(false)
             //   history.push('/productlisting');
 
@@ -273,8 +273,8 @@ const Account = (props) => {
     }, []);
 
     return (
-        <div className="col-12 flex justify-content-center">{displayData ? (
-            <Dialog header={displayData.productSKU} visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)} >
+        <div className="col-12 flex justify-content-center">{displayData.cartDetail ? (
+            <Dialog header={displayData.cartDetail.productSKU} visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)} >
 
 
                 <div >
@@ -282,7 +282,7 @@ const Account = (props) => {
 
                         <div className="flex col-12 justify-content-around align-content-center">
                             <InputNumber inputId="horizontal" value={value18} onValueChange={(e) => setValue18(e.value)} showButtons buttonLayout="horizontal" step={1}
-                                decrementButtonClassName="p-button-danger" incrementButtonClassName="p-button-success" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" min={1} max={displayData.productInStock} />
+                                decrementButtonClassName="p-button-danger" incrementButtonClassName="p-button-success" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" min={1} max={displayData.cartUnit+displayData.cartDetail.productInStock} />
 
                             <Button icon="pi pi-shopping-cart" label="Add to Cart" onClick={addtocart} loading={loading} ></Button>
 

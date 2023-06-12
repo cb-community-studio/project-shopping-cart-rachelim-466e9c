@@ -38,7 +38,6 @@ const UsersCreateDialogComponent = (props) => {
             password: _entity.password,
             fullname: _entity.fullname,
             phone: _entity.phone,
-            isAdmin: _entity.isAdmin,
             billingAddr: _entity.billingAddr
 
         };
@@ -92,10 +91,6 @@ const UsersCreateDialogComponent = (props) => {
                 <div>
                     <p className="m-0" >Phone Number:</p>
                     <InputText className="w-full mb-3" value={_entity?.phone} onChange={(e) => setValByKey("phone", e.target.value)}  />
-                </div>
-                <div>
-                    <p className="m-0" >isAdmin:</p>
-                    <Checkbox checked={_entity?.isAdmin} onChange={ (e) => setValByKey("isAdmin", e.checked)}  ></Checkbox>
                 </div>
                 <div>
                     <p className="m-0" >Billing Address:</p>

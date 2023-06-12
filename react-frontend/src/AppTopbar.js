@@ -29,12 +29,12 @@ const AppTopbar = (props) => {
             url: '/productlisting',
             
         },
-        {
-            label: 'Promotion',
-            icon: 'pi pi-fw pi-dollar',
-            url: '/promotion',
+        // {
+        //     label: 'Promotion',
+        //     icon: 'pi pi-fw pi-dollar',
+        //     url: '/promotion',
             
-        },
+        // },
         {
             label: 'FAQ',
             icon: 'pi pi-fw pi-question-circle',

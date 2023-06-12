@@ -82,7 +82,7 @@ const ContactUs = (props) => {
 
         <ul className="p-pl-2 p-ml-0 p-mt-0 p-text-bold">
 
-          <li>123 Main St, Anytown, USA</li>
+          <li>123 Main St, Selangor, Malaysia</li>
 
           <li>(123) 456-7890</li>
 
@@ -99,23 +99,23 @@ const ContactUs = (props) => {
         <div className="grid p-8 col-12 xl:col-8 flex flex-column align-items-center w-full">
           <div className="w-full mb-4">
             <p className="m-0">Name</p>
-            <InputText type="text" placeholder="Please place your name" value={formUser} onChange={(e) => setName(e.target.value)} ></InputText>
+            <InputText type="text" className='w-full' placeholder="Please place your name" value={formUser} onChange={(e) => setName(e.target.value)} ></InputText>
 
           </div>
           <div className="w-full mb-4">
             <p className="m-0">Email</p>
-            <InputText type="text" placeholder="example@gmail.com" value={formEmail} onChange={(e) => setEmail(e.target.value)} className={emailError ? "p-invalid" : ""} ></InputText>
+            <InputText type="text"  placeholder="example@gmail.com" value={formEmail} onChange={(e) => setEmail(e.target.value)} className={`${emailError ? "p-invalid" : ""} w-full`} ></InputText>
             <br></br>
             <small className="p-error">{emailError}</small>
           </div>
           <div className="w-full mb-4">
             <p className="m-0">Message</p>
-            <InputTextarea type="text" placeholder="Please state down your enquire or questions" value={formContent} onChange={(e) => setMessage(e.target.value)} rows={5}></InputTextarea>
+            <InputTextarea type="text" className='w-full' placeholder="Please state down your enquire or questions" value={formContent} onChange={(e) => setMessage(e.target.value)} rows={5}></InputTextarea>
 
           </div>
-          <div className="w-6 mb-4">
-            <Button label="Submit" className="p-button-raised p-button-rounded" onClick={handleSubmit} loading={loading}></Button>
-          </div>
+          <div className="w-full mb-4 flex justify-content-end">
+                                        <Button label="Submit" className="p-button-raised" onClick={handleSubmit} loading={loading}></Button>
+                                    </div>
         </div>
 
 

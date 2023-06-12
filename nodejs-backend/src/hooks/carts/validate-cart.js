@@ -45,7 +45,7 @@ module.exports = function (options = {}) {
             // Insert user into cart service
             data.cartUser = context.params.user._id.valueOf()
 
-            if (databaseProductData.data[0].productInStock >= data.cartUnit) {
+            if (databaseProductData.data[0].productInStock >= data.cartUnit ||context.method== 'patch') {
 
                 if (!databaseCartData.data.length && !context.id) {
 

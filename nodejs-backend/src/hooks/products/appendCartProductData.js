@@ -15,6 +15,13 @@ module.exports = function (options = {}) {
             });
             context.result.data[i].cartDetail = databaseData.data[0]
 
+            const databaseDataUser = await context.app.service("users").find({
+                query: {
+                    _id: context.result.data[i].cartUser
+                }
+            });
+            context.result.data[i].cartEmail = databaseDataUser.data[0].email
+
 
          }
 

@@ -75,33 +75,15 @@ const FormsPage = (props) => {
 
     const onRowClick = (e) => {};
 
-    const menuItems = [
-        {
-            label: "Faker",
-            icon: "pi pi-sliders-h",
-            command: (e) => {
-                setShowFakerDialog(true);
-            },
-        },
-        {
-            label: "Seeder",
-            icon: "pi pi-forward",
-            command: (e) => {
-                setShowSeederDialog(true);
-            },
-        },
-    ];
 
     return (
-        <div className="col-12 flex flex-column align-items-center">
-            <div className="col-10">
-                <h3 className="mb-0 ml-2">Forms</h3>
+        <div className="">
+            <div className="">
                 <div className="col flex justify-content-end">
                     <Button label="add" icon="pi pi-plus" onClick={() => setShowCreateDialog(true)} role="forms-add-button"/>
-                    <SplitButton model={menuItems} dropdownIcon="pi pi-ellipsis-v" buttonClassName="hidden" menuButtonClassName="ml-1 p-button-text"></SplitButton>
                 </div>
             </div>
-            <div className="grid col-10">
+            <div className="">
                 <div className="col-12" role="forms-datatable">
                     <FormsDatatable items={data} onRowDelete={onRowDelete} onEditRow={onEditRow} onRowClick={onRowClick} />
                 </div>

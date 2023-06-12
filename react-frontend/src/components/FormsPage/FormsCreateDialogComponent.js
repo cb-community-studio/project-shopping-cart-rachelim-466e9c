@@ -5,6 +5,8 @@ import client from "../../services/restClient";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import { InputText } from 'primereact/inputtext';
+import { Dropdown } from 'primereact/dropdown';
+
 
 
  
@@ -27,13 +29,17 @@ const FormsCreateDialogComponent = (props) => {
 
     const [loading, setLoading] = useState(false);
 
+    const formtypeOption = [
+        { name: 'FAQ', value: 'faq' },
+        { name: 'Enquiry', value: 'enquiry' }
+    ];
+
     useEffect(()=>{
         set_entity({})
     },[props.show])
     const onSave = async () => {
         let _data = {
             formUser: _entity.formUser,
-            formPhone: _entity.formPhone,
             formEmail: _entity.formEmail,
             formContent: _entity.formContent,
             formRemarks: _entity.formRemarks,
@@ -76,10 +82,6 @@ const FormsCreateDialogComponent = (props) => {
                     <InputText className="w-full mb-3" value={_entity?.formUser} onChange={(e) => setValByKey("formUser", e.target.value)}  />
                 </div>
                 <div>
-                    <p className="m-0" >Phone Number:</p>
-                    <InputText className="w-full mb-3" value={_entity?.formPhone} onChange={(e) => setValByKey("formPhone", e.target.value)}  />
-                </div>
-                <div>
                     <p className="m-0" >Email:</p>
                     <InputText className="w-full mb-3" value={_entity?.formEmail} onChange={(e) => setValByKey("formEmail", e.target.value)}  />
                 </div>
@@ -92,9 +94,9 @@ const FormsCreateDialogComponent = (props) => {
                     <InputText className="w-full mb-3" value={_entity?.formRemarks} onChange={(e) => setValByKey("formRemarks", e.target.value)}  />
                 </div>
                 <div>
-                    <p className="m-0" >Form Type:</p>
-                    <InputText className="w-full mb-3" value={_entity?.formType} onChange={(e) => setValByKey("formType", e.target.value)}  />
-                </div>
+                <p className="m-0" >Form Type:</p>
+                    <Dropdown value={_entity?.formType} onChange={(e) => setValByKey("formType", e.target.value)} options={formtypeOption} optionLabel="name"
+                                                placeholder="Select form option" className="w-full md:w-14rem" />  </div>
 
 
                 <small className="p-error">

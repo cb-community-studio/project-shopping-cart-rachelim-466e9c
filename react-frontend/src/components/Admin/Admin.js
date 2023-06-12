@@ -16,6 +16,9 @@ import { Rating } from 'primereact/rating';
 import { Dropdown } from 'primereact/dropdown';
 import { Link, useHistory } from "react-router-dom";
 
+import UsersPage from "../UsersPage/UsersPage";
+import ProductsPage from "../ProductsPage/ProductsPage";
+import FormsPage from "../FormsPage/FormsPage";
 
 import '../Admin/myacc.css';
 import { compact } from "lodash";
@@ -23,7 +26,7 @@ import { compact } from "lodash";
 const Admin = (props) => {
     const history = useHistory();
 
-    const [user, setUser] = useState(null);
+    const [users, setUsers] = useState(null);
     const [objectID, setObjectID] = useState("");
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
@@ -31,10 +34,14 @@ const Admin = (props) => {
     const [phone, setPhone] = useState("");
     const [billingAddr, setBillingAddr] = useState("");
     const [emailError, setEmailError] = useState("");
+
     const [loading, setLoading] = useState("");
 
     const [products, setProducts] = useState([]);
+    const [carts, setCarts] = useState([]);
     const [orders, setOrders] = useState([]);
+    const [faq, setFAQ] = useState([]);
+
 
     const [selectedCustomers, setSelectedCustomers] = useState(null);
     const [adminStatus, setAdminStatus] = useState(false);
@@ -46,11 +53,13 @@ const Admin = (props) => {
 
     const [orderPaymentOption, setorderPaymentOption] = useState(null);
     const [orderShippingAddr, setorderShippingAddr] = useState("");
-    const [orderShipment, setorderShipment] = useState("Tracking No..");
-    const paymentOption = [
-        { name: 'Online Banking', code: 'Online Banking' },
-        { name: 'Credit/Debit Card', code: 'Credit/Debit Card' },
-        { name: 'E-wallet', code: 'E-wallet' },
+    const [orderShipment, setorderShipment] = useState("");
+    const [orderStatus, setorderStatus] = useState("");
+
+    const statusOption = [
+        { name: 'Pending', value: 'Pending' },
+        { name: 'Delivered', value: 'Delivered' },
+        { name: 'Packing', value: 'Packing' },
     ];
 
 
@@ -62,18 +71,26 @@ const Admin = (props) => {
     const actionBodyTemplate = (rowData) => {
         return (
             <div className="flex">
-                <Button type="button" icon="pi pi-pencil" className="m-1" onClick={() => editModal(rowData)}></Button>
                 <Button type="button" icon="pi pi-times-circle" className="m-1" onClick={() => deleteModal(rowData)}></Button>
+            </div>
+        )
+
+    }
+    const actionBodyTemplateOrder = (rowData) => {
+        return (
+            <div className="flex">
+                <Button type="button" icon="pi pi-pencil" className="m-1" onClick={() => editModal(rowData)}></Button>
             </div>
         )
 
     }
 
     function editModal(rowData) {
-        setDisplayEditData(rowData.cartDetail)
+        console.log("order row data", rowData)
+        setorderStatus(rowData.orderStatus)
+        setorderShipment(rowData.orderShipment)
+        setDisplayEditData(rowData)
         setSelectedSingleID(rowData._id)
-        setValue18(rowData.cartUnit)
-        console.log("Edit data", rowData, displayData, "selectedCustomers", selectedCustomers)
         setVisible(true)
 
 
@@ -86,8 +103,8 @@ const Admin = (props) => {
             try {
                 const result = await client.service("carts").remove(rowData._id);
                 props.alert({ type: "success", title: "Delete", message: "Deleted successfully" });
-                let _newData = products.filter((_, i) => _._id !== rowData._id);
-                setProducts(_newData);
+                let _newData = carts.filter((_, i) => _._id !== rowData._id);
+                setCarts(_newData);
 
             } catch (error) {
                 console.log("error", error);
@@ -111,10 +128,10 @@ const Admin = (props) => {
         try {
             const result = await client.service("carts").patch(selectedSingleID, _data);
             props.alert({ type: "success", title: "Update", message: "Updated the cart successfully" });
-            let _newData = products.filter((_, i) => _._id !== selectedSingleID);
+            let _newData = carts.filter((_, i) => _._id !== selectedSingleID);
             console.log([..._newData, { ...result, cartDetail: displayData }])
 
-            setProducts([..._newData, { ...result, cartDetail: displayData }]);
+            setCarts([..._newData, { ...result, cartDetail: displayData }]);
             setVisible(false)
             //   history.push('/productlisting');
 
@@ -241,57 +258,117 @@ const Admin = (props) => {
                 // setBillingAddr(res.data[0].billingAddr);
                 // setObjectID(res.data[0]._id)
                 // setAdminStatus(res.data[0].isAdmin)
-                console.log("admin",res.data);
-                if (!res.data.length){
+                console.log("admin", res.data);
+                if (!res.data.length) {
                     history.push('/home');
                     props.alert({ title: "Admin Site", type: "error", message: "You are not allowed to access this site" });
 
 
-                }
-                // client
-                //     .service("carts")
-                //     .find({ query: { $limit: 100, cartUser: res.data[0]._id } })
-                //     .then((resCart) => {
-                //         setProducts(resCart.data)
-                //         console.log("carts", resCart.data);
-                //     })
-                //     .catch((error) => {
-                //         console.log({ error });
-                //         props.alert({ title: "Carts", type: "error", message: error.message || "Failed get carts" });
-                //     });
+                } else {
+                    // client
+                    // .service("users")
+                    // .find({ query: { $limit: 100} })
+                    // .then((resUser) => {
+                    //     setUsers(resUser.data)
+                    //     console.log("users", resUser.data);
+                    // })
+                    // .catch((error) => {
+                    //     console.log({ error });
+                    //     props.alert({ title: "Users", type: "error", message: error.message || "Failed get users" });
+                    // });
 
-                // client
-                //     .service("orders")
-                //     .find({ query: { $limit: 100, cartUser: res.data[0]._id } })
-                //     .then((resOrder) => {
-                //         setOrders(resOrder.data)
-                //         console.log("orders", resOrder.data);
-                //     })
-                //     .catch((error) => {
-                //         console.log({ error });
-                //         props.alert({ title: "Orders", type: "error", message: error.message || "Failed get orders" });
-                //     });
+                    // client
+                    // .service("products")
+                    // .find({ query: { $limit: 100} })
+                    // .then((resProd) => {
+                    //     setUsers(resProd.data)
+                    //     console.log("products", resProd.data);
+                    // })
+                    // .catch((error) => {
+                    //     console.log({ error });
+                    //     props.alert({ title: "Products", type: "error", message: error.message || "Failed get products" });
+                    // });
+
+                    client
+                        .service("carts")
+                        .find({ query: { $limit: 100 } })
+                        .then((resCart) => {
+                            setCarts(resCart.data)
+                            console.log("carts", resCart.data);
+                        })
+                        .catch((error) => {
+                            console.log({ error });
+                            props.alert({ title: "Carts", type: "error", message: error.message || "Failed get carts" });
+                        });
+
+                    client
+                        .service("orders")
+                        .find({ query: { $limit: 100 } })
+                        .then((resOrder) => {
+                            setOrders(resOrder.data)
+                            console.log("orders", resOrder.data);
+                        })
+                        .catch((error) => {
+                            console.log({ error });
+                            props.alert({ title: "Orders", type: "error", message: error.message || "Failed get orders" });
+                        });
+
+                }
+
             })
             .catch((error) => {
+                history.push('/home');
+
                 console.log({ error });
-                props.alert({ title: "Users", type: "error", message: error.message || "Failed get user" });
+                props.alert({ title: "Users", type: "error", message: error.message || "Failed get single user" });
             });
     }, []);
 
+    const onSave = async () => {
+        let _data = {
+            orderShipment: orderShipment,
+            orderStatus: orderStatus
+
+        };
+
+        setLoading(true);
+        try {
+            const result = await client.service("orders").patch(selectedSingleID, _data);
+            setVisible(false)
+            props.alert({ type: "success", title: "Edit cart", message: "Info updated successfully" });
+        } catch (error) {
+            console.log("error", error);
+            props.alert({ type: "error", title: "Edit cart", message: "Failed to update info" });
+        }
+        setLoading(false);
+    };
+
+    const renderFooter = () => (
+        <div className="flex justify-content-end">
+            <Button label="save" className="p-button-text no-focus-effect" onClick={onSave} loading={loading} />
+            <Button label="close" className="p-button-text no-focus-effect p-button-secondary" onClick={() => setVisible(false)} />
+        </div>
+    );
+
+
     return (
         <div className="col-12 flex justify-content-center">{displayData ? (
-            <Dialog header={displayData.productSKU} visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)} >
+            <Dialog header={displayData._id} visible={visible} style={{ width: '50vw' }} footer={renderFooter()} onHide={() => setVisible(false)} >
 
 
                 <div >
                     <div className='grid grid-nogutter flex justify-content-around align-content-center'>
 
-                        <div className="flex col-12 justify-content-around align-content-center">
-                            <InputNumber inputId="horizontal" value={value18} onValueChange={(e) => setValue18(e.value)} showButtons buttonLayout="horizontal" step={1}
-                                decrementButtonClassName="p-button-danger" incrementButtonClassName="p-button-success" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" min={1} max={displayData.productInStock} />
-
-                            <Button icon="pi pi-shopping-cart" label="Add to Cart" onClick={addtocart} loading={loading} ></Button>
-
+                        <div role="forms-edit-dialog-component">
+                            <div>
+                                <p className="m-0" >Shipment Details:</p>
+                                <InputText className="w-full mb-3" value={orderShipment} onChange={(e) => setorderShipment(e.target.value)} />
+                            </div>
+                            <div>
+                                <p className="m-0" >Status:</p>
+                                <Dropdown value={orderStatus} onChange={(e) => setorderStatus(e.target.value)} options={statusOption} optionLabel="name"
+                                    placeholder="Select  order status" className="w-full md:w-14rem" />
+                            </div>
                         </div>
                     </div>
 
@@ -303,75 +380,46 @@ const Admin = (props) => {
 
             </Dialog>) : null}
 
+
             <div className="col-12">
                 <div className="card">
                     <TabView className="tabview-demo tabview-header-icon">
                         <TabPanel header=" -User List " leftIcon="pi pi-user ">
-                            
+                            <UsersPage></UsersPage>
                         </TabPanel>
                         <TabPanel header=" -Product List " leftIcon="pi pi-tags ">
-                            
+                            <ProductsPage></ProductsPage>
                         </TabPanel>
                         <TabPanel header=" -Shopping Cart List" leftIcon="pi pi-shopping-cart">
                             <div className="card">
-                                <DataTable value={products} responsiveLayout="scroll" dataKey="_id" rowHover selection={selectedCustomers} onSelectionChange={e => setSelectedCustomers(e.value)} emptyMessage="No carts found.">
-                                    <Column selectionMode="multiple" selectionAriaLabel="name" headerStyle={{ width: '3em' }}></Column>
+                                <DataTable value={carts} responsiveLayout="scroll" dataKey="_id" rowHover selection={selectedCustomers} onSelectionChange={e => setSelectedCustomers(e.value)} emptyMessage="No carts found.">
+                                    <Column field="cartEmail" sortable header="User Email"></Column>
+                                    <Column field="cartDetail.productSKU" sortable header="Code"></Column>
+                                    <Column field="cartDetail.productName" sortable header="Name"></Column>
+                                    <Column field="cartDetail.productBrand" sortable header="Category"></Column>
+                                    <Column field="cartUnit" sortable className="text-center" header="Quantity"></Column>
                                     <Column field="cartDetail" header="Image" body={imageBodyTemplate}></Column>
-                                    <Column field="cartDetail.productSKU" header="Code"></Column>
-                                    <Column field="cartDetail.productName" header="Name"></Column>
-                                    <Column field="cartDetail.productBrand" header="Category"></Column>
-                                    <Column field="cartUnit" className="text-center" header="Quantity"></Column>
                                     <Column header="Action" headerStyle={{ width: '4rem', textAlign: 'center' }} bodyStyle={{ textAlign: 'center', overflow: 'visible' }} body={actionBodyTemplate} />
                                 </DataTable>
                                 <br></br>
 
-                                {selectedCustomers ? (<Fieldset legend="Checkout Form" className="p-mb-6 col-12 w-full">
-
-                                    <div className="grid p-8 col-12 xl:col-8 flex flex-column align-items-center w-full">
-                                        <div className="w-full mb-4">
-                                            <p className="m-0">You have selected {selectedCustomers.length} items</p>
-
-
-                                        </div>
-                                        <div className="w-full mb-4">
-                                            <p className="m-0">Payment Option</p>
-                                            <Dropdown value={orderPaymentOption} onChange={(e) => setorderPaymentOption(e.value)} options={paymentOption} optionLabel="name"
-                                                placeholder="Select payment option" className="w-full md:w-14rem" />
-                                        </div>
-                                        <div className="w-full mb-4">
-                                            <p className="m-0">Shipping Address</p>
-                                            <InputText type="text" className="w-full" placeholder="Please place your address" value={orderShippingAddr} onChange={(e) => setorderShippingAddr(e.target.value)} ></InputText>
-
-                                        </div>
-                                        <div className="w-full mb-4 flex justify-content-end">
-                                            <Button type="button" label="Checkout" className="m-1" onClick={checkout}></Button>
-
-                                        </div>
-                                    </div>
-
-                                </Fieldset>) : null}
-
                             </div>
                         </TabPanel>
                         <TabPanel header=" -Order History List" leftIcon="pi pi-history" >
-                            <DataTable value={orders} responsiveLayout="scroll" dataKey="_id" rowHover  emptyMessage="No order found.">
-                             
-                                <Column field="orderSummary" header="Products" body={rowExpansionTemplate }></Column>
+                            <DataTable value={orders} responsiveLayout="scroll" dataKey="_id" rowHover emptyMessage="No order found.">
+                                <Column field="_id" header="ID"></Column>
+
+                                <Column field="orderSummary" header="Products" body={rowExpansionTemplate}></Column>
                                 <Column field="orderPaymentOption" header="Payment Option"></Column>
                                 <Column field="orderStatus" header="Status"></Column>
                                 <Column field="orderPayment" className="text-center" header="Total Amount"></Column>
                                 <Column field="orderShipment" className="text-center" header="Detail"></Column>
+                                <Column header="Action" headerStyle={{ width: '4rem', textAlign: 'center' }} bodyStyle={{ textAlign: 'center', overflow: 'visible' }} body={actionBodyTemplateOrder} />
+
                             </DataTable>
                         </TabPanel>
                         <TabPanel header=" -FAQ List" leftIcon="pi pi-question-circle" >
-                            <DataTable value={orders} responsiveLayout="scroll" dataKey="_id" rowHover  emptyMessage="No order found.">
-                             
-                                <Column field="orderSummary" header="Products" body={rowExpansionTemplate }></Column>
-                                <Column field="orderPaymentOption" header="Payment Option"></Column>
-                                <Column field="orderStatus" header="Status"></Column>
-                                <Column field="orderPayment" className="text-center" header="Total Amount"></Column>
-                                <Column field="orderShipment" className="text-center" header="Detail"></Column>
-                            </DataTable>
+                            <FormsPage></FormsPage>
                         </TabPanel>
 
                     </TabView>

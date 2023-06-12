@@ -54,7 +54,7 @@ const ProductListing = (props) => {
         //on mount
         client
             .service("products")
-            .find({ query: { $limit: 100 } })
+            .find({ query: { $limit: 100, productIsActive:true } })
             .then((res) => {
                 setProducts(res.data);
                 console.log(res.data);

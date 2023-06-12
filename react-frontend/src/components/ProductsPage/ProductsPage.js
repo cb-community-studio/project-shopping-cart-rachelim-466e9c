@@ -57,15 +57,17 @@ const ProductsPage = (props) => {
     };
 
     const deleteRow = async () => {
+        let _data = {
+            productIsActive: false,
+        };
         try {
-            await client.service("products").remove(data[selectedEntityIndex]?._id);
-            let _newData = data.filter((_, i) => i !== selectedEntityIndex);
-            setData(_newData);
-            setSelectedEntityIndex(null);
+            const result = await client.service("products").patch(data[selectedEntityIndex]?._id, _data);
             setShowAreYouSureDialog(false)
+            props.alert({ type: "success", title: "Edit info", message: "Info updated successfully" });
+            onEditResult(result);
         } catch (error) {
-            console.log({ error });
-            props.alert({ title: "Products", type: "error", message: error.message || "Failed delete record" });
+            console.log("error", error);
+            props.alert({ type: "error", title: "Edit info", message: "Failed to update info" });
         }
     };
     const onRowDelete = (index) => {
@@ -75,38 +77,20 @@ const ProductsPage = (props) => {
 
     const onRowClick = (e) => {};
 
-    const menuItems = [
-        {
-            label: "Faker",
-            icon: "pi pi-sliders-h",
-            command: (e) => {
-                setShowFakerDialog(true);
-            },
-        },
-        {
-            label: "Seeder",
-            icon: "pi pi-forward",
-            command: (e) => {
-                setShowSeederDialog(true);
-            },
-        },
-    ];
 
     return (
-        <div className="col-12 flex flex-column align-items-center">
-            <div className="col-10">
-                <h3 className="mb-0 ml-2">Products</h3>
+        <div className="">
+            <div className="">
                 <div className="col flex justify-content-end">
                     <Button label="add" icon="pi pi-plus" onClick={() => setShowCreateDialog(true)} role="products-add-button"/>
-                    <SplitButton model={menuItems} dropdownIcon="pi pi-ellipsis-v" buttonClassName="hidden" menuButtonClassName="ml-1 p-button-text"></SplitButton>
                 </div>
             </div>
-            <div className="grid col-10">
+            <div className="">
                 <div className="col-12" role="products-datatable">
                     <ProductsDatatable items={data} onRowDelete={onRowDelete} onEditRow={onEditRow} onRowClick={onRowClick} />
                 </div>
             </div>
-            <AreYouSureDialog header="Delete" body="Are you sure you want to delete this record?" show={showAreYouSureDialog} onHide={() => setShowAreYouSureDialog(false)} onYes={() => deleteRow()} />
+            <AreYouSureDialog header="Delete" body="Are you sure you want to inactive this record (product)?" show={showAreYouSureDialog} onHide={() => setShowAreYouSureDialog(false)} onYes={() => deleteRow()} />
             <ProductsEditDialogComponent entity={data[selectedEntityIndex]} show={showEditDialog} onHide={() => setShowEditDialog(false)} onEditResult={onEditResult} />
             <ProductsCreateDialogComponent show={showCreateDialog} onHide={() => setShowCreateDialog(false)} onCreateResult={onCreateResult} />
             <ProductsFakerDialogComponent show={showFakerDialog} onHide={() => setShowFakerDialog(false)} onFakerCreateResults={onFakerCreateResults} />

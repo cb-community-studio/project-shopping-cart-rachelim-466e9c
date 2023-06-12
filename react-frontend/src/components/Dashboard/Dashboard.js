@@ -14,7 +14,7 @@ const Dashboard = (props) => {
         //on mount
         client
             .service("products")
-            .find({ query: { $limit: 3 } })
+            .find({ query: { $limit: 3,productIsActive:true } })
             .then((res) => {
                 setData(res.data);
                 console.log(res.data);

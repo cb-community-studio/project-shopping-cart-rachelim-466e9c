@@ -6,9 +6,11 @@ import { Button } from "primereact/button";
 import { useHistory } from "react-router-dom";
 // import { deviceDetect } from "react-device-detect";
 const SignUpPage = (props) => {
-    const [name, setName] = useState("");
+    const [username, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [_entity, set_entity] = useState({});
+
 
     const [nameError, setNameError] = useState(null);
     const [emailError, setEmailError] = useState(null);
@@ -18,7 +20,7 @@ const SignUpPage = (props) => {
     const history = useHistory();
 
     useEffect(() => {
-        if (props.isLoggedIn === true) history.push("/user/studio");
+        if (props.isLoggedIn === true) history.push("/account");
     }, [props.isLoggedIn]);
 
     const onEnter = (e) => {
@@ -27,7 +29,17 @@ const SignUpPage = (props) => {
 
     const signup = () => {
         if (validate()) {
-            props.createUser({ name, email, password }).then((res) => {
+            let _data = {
+                username: username,
+                email: email,
+                password: password,
+                fullname: _entity.fullname,
+                phone: _entity.phone,
+                billingAddr: _entity.billingAddr
+    
+            };
+
+            props.createUser(_data).then((res) => {
                 history.push("/login");
             });
         }
@@ -40,10 +52,10 @@ const SignUpPage = (props) => {
             setEmailError("Please Enter a valid email");
             isValid = false;
         }
-        if (!name.length) {
+        if (!username.length) {
             setNameError("name is required");
             isValid = false;
-        } else if (name.length < 3) {
+        } else if (username.length < 3) {
             setNameError("Must be at least 3 characters long");
             isValid = false;
         }
@@ -58,6 +70,11 @@ const SignUpPage = (props) => {
         return isValid;
     };
 
+    const setValByKey = (key, val) => {
+        let new_entity = { ..._entity, [key]: val };
+        set_entity(new_entity);
+    };
+
     const renderPasswordPolicyErrors = () => {
         const { passwordPolicyErrors } = props;
         if (!(Array.isArray(passwordPolicyErrors) && passwordPolicyErrors.length)) return null;
@@ -70,11 +87,11 @@ const SignUpPage = (props) => {
         });
     };
     return (
-        <div className="grid p-fluid flex flex-column align-items-center h-screen">
+        <div className=" p-fluid flex flex-column align-items-center justify-content-center h-screen">
             <div className="col-12 lg:col-5 px-6">
                 <div className="card">
                     <div>
-                        <p>
+                        <p className="text-center">
                             Already have an account? <a href="/login">Login</a>
                         </p>
                     </div>
@@ -86,7 +103,7 @@ const SignUpPage = (props) => {
                             <InputText
                                 type="text"
                                 placeholder="Enter your name"
-                                value={name}
+                                value={username}
                                 onChange={(e) => {
                                     setName(e.target.value);
                                     setNameError(null);
@@ -129,6 +146,34 @@ const SignUpPage = (props) => {
                             </span>
                             <small className="p-error">{passwordError}</small>
                             {renderPasswordPolicyErrors()}
+                        </div>
+
+                        <div className="col-12 lg:col-8">
+                            <p className="m-0">Full name</p>
+                            <InputText
+                                type="text"
+                                placeholder="Enter your fullname"
+                                value={_entity?.fullname} onChange={(e) => setValByKey("fullname", e.target.value)} 
+                                onKeyDown={onEnter}
+                            ></InputText>
+                        </div>
+                        <div className="col-12 lg:col-8">
+                            <p className="m-0">Phone Number</p>
+                            <InputText
+                                type="text"
+                                placeholder="Enter your phone number"
+                                value={_entity?.phone} onChange={(e) => setValByKey("phone", e.target.value)}
+                                onKeyDown={onEnter}
+                            ></InputText>
+                        </div>
+                        <div className="col-12 lg:col-8">
+                            <p className="m-0">Billing Address</p>
+                            <InputText
+                                type="text"
+                                placeholder="Enter your email"
+                                value={_entity?.billingAddr} onChange={(e) => setValByKey("billingAddr", e.target.value)}
+                                onKeyDown={onEnter}
+                            ></InputText>
                         </div>
                     </div>
                     <div className="flex justify-content-center mt-3">

@@ -5,6 +5,8 @@ import client from "../../services/restClient";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import { InputText } from 'primereact/inputtext';
+import { Checkbox } from 'primereact/checkbox';
+
 
 
  
@@ -36,10 +38,9 @@ const ProductsCreateDialogComponent = (props) => {
             productName: _entity.productName,
             productBrand: _entity.productBrand,
             productPrice: _entity.productPrice,
-            productRating: _entity.productRating,
+            productRating: _entity.productRating>5? 5: _entity.productRating ,
             productInStock: _entity.productInStock,
             productDetails: _entity.productDetails,
-            productImage: _entity.productImage
 
         };
 
@@ -90,8 +91,8 @@ const ProductsCreateDialogComponent = (props) => {
                     <InputText type="number" className="w-full mb-3" value={_entity?.productPrice} onChange={(e) => setValByKey("productPrice", e.target.value)}  />
                 </div>
                 <div>
-                    <p className="m-0" >Rating:</p>
-                    <InputText type="number" className="w-full mb-3" value={_entity?.productRating} onChange={(e) => setValByKey("productRating", e.target.value)}  />
+                    <p className="m-0" >Rating: (Max 5)</p>
+                    <InputText type="number" className="w-full mb-3" max={5} value={_entity?.productRating} onChange={(e) => setValByKey("productRating", e.target.value)}  />
                 </div>
                 <div>
                     <p className="m-0" >In Stock:</p>
@@ -101,10 +102,7 @@ const ProductsCreateDialogComponent = (props) => {
                     <p className="m-0" >Description:</p>
                     <InputText className="w-full mb-3" value={_entity?.productDetails} onChange={(e) => setValByKey("productDetails", e.target.value)}  />
                 </div>
-                <div>
-                    <p className="m-0" >Image:</p>
-                    <InputText className="w-full mb-3" value={_entity?.productImage} onChange={(e) => setValByKey("productImage", e.target.value)}  />
-                </div>
+                <div>Please take note: currently the Image cannot be uploaded at here, please contact IT for assistance</div>
 
 
                 <small className="p-error">

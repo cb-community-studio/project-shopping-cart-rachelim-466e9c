@@ -29,6 +29,7 @@ export const auth = {
                 } catch (error) {
                     console.log("error", { error });
                     reject(error);
+                    
                 }
                 dispatch.loading.hide();
             });
